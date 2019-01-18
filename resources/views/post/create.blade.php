@@ -4,11 +4,11 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-			<a href="{{ route('myposts') }}">To List</a>
+			<a href="/post">To List</a>
             <div class="card">
 				<h3>Post Add/Edit</h3>
 				<form id="post-form">
-				<input type="hidden" name="post_id" id="post-id" value="{{ $post_id }}">
+				
 				{{ csrf_field() }}
 				<table>
 					<tr>
@@ -16,7 +16,7 @@
 							Title:
 						</td>
 						<td>
-							<input type="text" name="title" value="{{ $title }}">
+							<input type="text" name="title">
 						</td>
 								<td><div id="title-error" class="error"></div></td>
 					</tr>
@@ -25,7 +25,7 @@
 							Content:
 						</td>
 						<td>
-							<textarea name="content">{{ $content }}</textarea>
+							<textarea name="content"></textarea>
 						</td>
 						<td><div id="content-error" class="error"></div></td>
 					</tr>
@@ -34,7 +34,7 @@
 							Tags:
 						</td>
 						<td>
-							<input type="text" name="tags" value="{{ $tags }}">
+							<input type="text" name="tags" value="">
 						</td>
 						<td><div id="tags-error" class="error"></div></td>
 					</tr>
@@ -43,7 +43,7 @@
 							SEO URL:
 						</td>
 						<td>
-							<input type="text" name="seo_url" value="{{ $seo_url }}">
+							<input type="text" name="seo_url" value="">
 						</td>
 						<td><div id="seo_url-error" class="error"></div></td>
 					</tr>

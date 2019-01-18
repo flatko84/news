@@ -7,7 +7,14 @@ use App\Posts;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller {
-
+	
+	
+	protected $rules = [
+					'title' => 'required|min:5|max:30|alpha_num',
+					'content' => 'required|min:30|max:400',
+					'tags' => 'required',
+					'seo_url' => 'required|unique:posts,seo_url|alpha_dash'
+				];
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -35,13 +42,10 @@ class PostController extends Controller {
 	 */
 	public function store(Request $request) {
 
-		Posts::create($this->validate($request, [
-					'title' => 'required|min:5|max:30|alpha_num',
-					'content' => 'required|min:30|max:400',
-					'tags' => 'required',
-					'seo_url' => 'required|unique:posts,seo_url|alpha_dash'
-				])
+		$json = Posts::create($this->validate($request, $rules)
 		);
+		
+		return json_encode($json);
 	}
 
 	/**
@@ -74,14 +78,10 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request, $id) {
-		Posts::where('post_id', $id)->update(
-				$this->validate($request, [
-					'title' => 'required|min:5|max:30|alpha_num',
-					'content' => 'required|min:30|max:400',
-					'tags' => 'required',
-					'seo_url' => 'required|unique:posts,seo_url|alpha_dash'
-				])
+		$json = Posts::where('post_id', $id)->update(
+				$this->validate($request, $rules)
 		);
+		return json_encode($json);
 	}
 
 	/**
@@ -91,7 +91,7 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id) {
-		//
+		Posts::where('post_id', $id)->delete();
 	}
 
 }
