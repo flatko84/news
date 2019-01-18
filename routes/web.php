@@ -11,15 +11,12 @@
 |
 */
 
-
-
-Route::get('/myposts' , 'publish@getPosts')->name('myposts')->middleware('auth');
-Route::get('/postform/{post_id?}', 'publish@postForm')->name('postform')->middleware('auth');
-Route::post('/publish', 'publish@publishPost')->name('publish')->middleware('auth');
-
 Auth::routes();
+Route::resource('/post', 'PostController')->middleware('auth')->names('post');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/', 'feed@index');
 Route::get('{seo_url}', 'feed@post');
+
+

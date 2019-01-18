@@ -8,7 +8,7 @@ use App\Posts;
 class feed extends Controller
 {
     public function index(){
-		$posts = Posts::all();
+		$posts = Posts::orderBy('created_at', 'desc')->get();
 		return view('feed', ['posts' => $posts]);
 	}
 	

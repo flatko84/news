@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Posts;
 USE Illuminate\Support\Facades\Auth;
 
-class publish extends Controller {
+class PublishController extends Controller {
 
 	public function getPosts() {
 		$posts = Posts::where('user_id', Auth::id())->get();
@@ -20,6 +20,11 @@ class publish extends Controller {
 
 		if ($post !== null) {
 
+        $model::update( $request->validate($request, [
+		]));
+			
+			
+			
 			$response = [
 				'title' => $post->title,
 				'content' => $post->content,
@@ -43,10 +48,10 @@ class publish extends Controller {
 		
 		//validate request
 		$this->validate($request, [
-			'title' => 'required',
-			'content' => 'required',
+			'title' => 'required|min:5|max:30|alpha_num',
+			'content' => 'required|min:30|max:400',
 			'tags' => 'required',
-			'seo_url' => 'required'
+			'seo_url' => 'required|unique:posts,seo_url|alpha_dash'
 		]);
 
 		//set fields
