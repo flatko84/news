@@ -3,7 +3,7 @@ $(document).ready(function () {
     $('#send-post').click(function () {
 
         $.ajax({
-            url: '/publish',
+            url: '/post/create',
             type: 'post',
             data: $('#post-form').serialize(),
             dataType: 'json',
