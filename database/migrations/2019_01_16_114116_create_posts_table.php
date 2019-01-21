@@ -17,11 +17,11 @@ class CreatePostsTable extends Migration
             $table->increments('post_id');
 			$table->integer('category_id');
 			$table->integer('user_id');
-			$table->text('title');
+			$table->string('title');
 			$table->text('content');
-			$table->text('image');
-			$table->text('tags');
-			$table->text('seo_url');
+			$table->string('image');
+			$table->string('tags');
+			$table->string('seo_url')->unique();
             $table->timestamps();
         });
     }
