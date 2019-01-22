@@ -68,7 +68,8 @@
 			<h2> {{ $post['title'] }} </h2><br>
 			<p>{{ $post['content'] }} </p>
 			{{ $post['seo_url'] }}
-			Posted by {{ $user }}
+			Posted by {{ $user }} <br>
+			<a href='/post/{{ $post['post_id'] }}/edit'>Edit</a>
         
     </body>
 </html>

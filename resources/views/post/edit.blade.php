@@ -66,6 +66,7 @@
 							<input type="button" value="Save" id="send-post"></td></tr>
 				</table>
 				</form>
+				<a href="/post/{{ $post->post_id }}">Show</a>
 				@else
 				You don't have permission to edit this post.
 				@endif

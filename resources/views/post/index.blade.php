@@ -11,22 +11,21 @@
 					@method('DELETE')
 					{{ csrf_field() }}
 					<table>
-						<tr>
-							<td>
-								Name
-							</td>
-							<td>
-								Operations
-							</td>
-						</tr>
+						
 						@foreach ($posts as $post)
 
 						<tr>
 							<td>
-								<a href="/post/{{ $post['post_id'] }}/edit">{{ $post['title'] }}</a>
+								{{ $post['title'] }}
 							</td>
 							<td>
-								<input type="button" onClick="del({{ $post['post_id'] }})" value="Delete"></a>
+								<a href="/post/{{ $post['post_id'] }}">Show</a>
+							</td>
+							<td>
+								<a href="/post/{{ $post['post_id'] }}/edit">Edit</a>
+							</td>
+							<td>
+								<a href="javascript:del({{ $post['post_id'] }})">Delete</a>
 							</td>
 						</tr>
 
