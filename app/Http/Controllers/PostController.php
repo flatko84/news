@@ -71,7 +71,7 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function edit($id) {
-		$post = Posts::where('post_id', $id)->first();
+		$post = Posts::where('post_id', $id)->where('user_id', Auth::id())->first();
 		$categories = Categories::all();
 		return view('post.edit', ['post' => $post, 'categories' => $categories]);
 	}
@@ -89,7 +89,7 @@ class PostController extends Controller {
 
 		$update = $request->validate($this->rules);
 		$update['image'] = '';
-		$post = Posts::where('post_id', $id)->update($update);
+		$post = Posts::where('post_id', $id)->where('user_id', Auth::id())->update($update);
 		return json_encode($post);
 	}
 
@@ -100,7 +100,7 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id) {
-		Posts::where('post_id', $id)->delete();
+		Posts::where('post_id', $id)->where('user_id', Auth::id())->delete();
 		return redirect('/post');
 	}
 

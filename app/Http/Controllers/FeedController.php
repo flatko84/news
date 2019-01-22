@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Posts;
 use App\Categories;
 
-class feed extends Controller
+class FeedController extends Controller
 {
     public function index(){
 		$posts = Posts::orderBy('created_at', 'desc')->get();

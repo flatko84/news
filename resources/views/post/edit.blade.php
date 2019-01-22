@@ -8,6 +8,7 @@
 			<div id="success"></div>
             <div class="card">
 				<h3>Post Add/Edit</h3>
+				@if ($post)
 				<form id="post-form">
 				<input type="hidden" name="post_id" id="post-id" value="{{ $post->post_id }}">
 				{{ csrf_field() }}
@@ -65,6 +66,9 @@
 							<input type="button" value="Save" id="send-post"></td></tr>
 				</table>
 				</form>
+				@else
+				You don't have permission to edit this post.
+				@endif
 			</div>
 		</div>
 	</div>
