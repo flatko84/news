@@ -17,6 +17,7 @@ Route::resource('/post', 'PostController')->middleware('auth')->names('post');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/', 'feed@index');
-Route::get('{seo_url}', 'feed@post');
+Route::get('/{seo_url}', 'feed@post');
+Route::get('/category/{category_id}', 'feed@category');
 
 

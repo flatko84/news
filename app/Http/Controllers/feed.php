@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Posts;
+use App\Categories;
 
 class feed extends Controller
 {
@@ -17,5 +18,11 @@ class feed extends Controller
 		
 		
 		return view('post', ['post' => $post, 'user' => $post->users->name]);
+	}
+	
+	public function category($category_id){
+		
+		$posts = Posts::where('category_id', $category_id)->orderBy('created_at', 'desc')->get();
+		return view('category', ['posts' => $posts]);
 	}
 }
