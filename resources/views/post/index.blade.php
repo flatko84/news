@@ -8,8 +8,8 @@
 			<div class="card">
 				
 				<form method="POST" id="del-form">
-					<input type="hidden" name="_method" value="DELETE">
-							{{ csrf_field() }}
+					@method('DELETE')
+					{{ csrf_field() }}
 					<table>
 						<tr>
 							<td>
