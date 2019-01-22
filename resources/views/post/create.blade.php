@@ -46,6 +46,19 @@
 						</td>
 						<td><div id="seo_url-error" class="error">{{ $errors->first('seo_url') }}</div></td>
 					</tr>
+					<tr>
+						<td>
+							Category:
+						</td>
+						<td>
+							<select name="category_id">
+								@foreach ($categories as $category)
+								<option value='{{ $category['category_id'] }}'> {{ $category['title'] }}
+								@endforeach
+							</select>
+						</td>
+						<td><div id="seo_url-error" class="error">{{ $errors->first('category') }}</div></td>
+					</tr>
 					<tr><td></td><td>
 							<input type="submit" value="Save" id="send-post"></td></tr>
 				</table>

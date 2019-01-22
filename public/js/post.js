@@ -15,8 +15,9 @@ $(document).ready(function () {
                 $('#send-post').attr('disabled', false);
             },
             success: function (json) {
-
-                alert("Success!");
+                
+                $('#success').html("Success!");
+                $('#success').show().delay(1500).fadeOut(500);
             }
             ,
             error: function (error) {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Posts;
+use App\Categories;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller {
@@ -12,7 +13,8 @@ class PostController extends Controller {
 		'title' => 'required|min:5|max:30',
 		'content' => 'required|min:30|max:400',
 		'tags' => 'required',
-		'seo_url' => 'required|alpha_dash|unique:posts,seo_url'
+		'seo_url' => 'required|alpha_dash|unique:posts,seo_url',
+		'category_id' => 'required'
 	];
 
 	/**
@@ -31,7 +33,8 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function create() {
-		return view('post.create');
+		$categories = Categories::all();
+		return view('post.create', ['categories' => $categories]);
 	}
 
 	/**
@@ -43,7 +46,6 @@ class PostController extends Controller {
 	public function store(Request $request) {
 
 		$insert = $request->validate($this->rules);
-		$insert['category_id'] = '1';
 		$insert['user_id'] = Auth::id();
 		$insert['image'] = '';
 		$post = Posts::create($insert);
@@ -70,7 +72,8 @@ class PostController extends Controller {
 	 */
 	public function edit($id) {
 		$post = Posts::where('post_id', $id)->first();
-		return view('post.edit', ['post' => $post]);
+		$categories = Categories::all();
+		return view('post.edit', ['post' => $post, 'categories' => $categories]);
 	}
 
 	/**
@@ -85,7 +88,6 @@ class PostController extends Controller {
 		$this->rules['seo_url'] .= ',' . $id . ',post_id';
 
 		$update = $request->validate($this->rules);
-		$update['category_id'] = '1';
 		$update['image'] = '';
 		$post = Posts::where('post_id', $id)->update($update);
 		return json_encode($post);
@@ -98,8 +100,8 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id) {
-		$json = Posts::where('post_id', $id)->delete();
-		return json_encode($json);
+		Posts::where('post_id', $id)->delete();
+		return redirect('/post');
 	}
 
 }

@@ -5,6 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
 			<a href="/post">To List</a>
+			<div id="success"></div>
             <div class="card">
 				<h3>Post Add/Edit</h3>
 				<form id="post-form">
@@ -46,6 +47,19 @@
 							<input type="text" name="seo_url" value="{{ $post->seo_url }}">
 						</td>
 						<td><div id="seo_url-error" class="error"></div></td>
+					</tr>
+					<tr>
+						<td>
+							Category:
+						</td>
+						<td>
+							<select name="category_id">
+								@foreach ($categories as $category)
+								<option @if ($category['category_id'] == $post->category_id) selected @endif value='{{ $category['category_id'] }}'> {{ $category['title'] }}
+								@endforeach
+							</select>
+						</td>
+						<td><div id="seo_url-error" class="error">{{ $errors->first('category') }}</div></td>
 					</tr>
 					<tr><td></td><td>
 							<input type="button" value="Save" id="send-post"></td></tr>

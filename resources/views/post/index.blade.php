@@ -6,7 +6,10 @@
         <div class="col-md-8">
 			<a href="{{ route('post.create') }}">New post</a>
 			<div class="card">
-				<fo			rm method="post">
+				
+				<form method="POST" id="del-form">
+					<input type="hidden" name="_method" value="DELETE">
+							{{ csrf_field() }}
 					<table>
 						<tr>
 							<td>
@@ -16,14 +19,14 @@
 								Operations
 							</td>
 						</tr>
-						@foreach ($posts as $post)												)
+						@foreach ($posts as $post)
 
 						<tr>
 							<td>
 								<a href="/post/{{ $post['post_id'] }}/edit">{{ $post['title'] }}</a>
 							</td>
 							<td>
-								<a onClick="delete(this.name)" name="{{  }}">Delete</a>
+								<input type="button" onClick="del({{ $post['post_id'] }})" value="Delete"></a>
 							</td>
 						</tr>
 
