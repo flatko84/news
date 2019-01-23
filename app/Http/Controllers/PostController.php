@@ -60,8 +60,13 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show($id) {
+		$user = Auth::user();
 		$post = Posts::where('post_id', $id)->first();
+		if ($user->can('view', $post)){
 		return view('post.show', ['post' => $post, 'user' => $post->users->name]);
+		} else {
+			return "No access!";
+		}
 	}
 
 	/**
@@ -71,7 +76,7 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function edit($id) {
-		$post = Posts::where('post_id', $id)->where('user_id', Auth::id())->first();
+		$post = Posts::where('post_id', $id)->first();
 		$categories = Categories::all();
 		return view('post.edit', ['post' => $post, 'categories' => $categories]);
 	}
@@ -89,7 +94,7 @@ class PostController extends Controller {
 
 		$update = $request->validate($this->rules);
 		$update['image'] = '';
-		$post = Posts::where('post_id', $id)->where('user_id', Auth::id())->update($update);
+		$post = Posts::where('post_id', $id)->update($update);
 		return json_encode($post);
 	}
 
@@ -100,7 +105,7 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id) {
-		Posts::where('post_id', $id)->where('user_id', Auth::id())->delete();
+		Posts::where('post_id', $id)->delete();
 		return redirect('/post');
 	}
 
