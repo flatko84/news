@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Posts;
 use App\Categories;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller {
 
@@ -60,13 +61,9 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show($id) {
-		$user = Auth::user();
+		
 		$post = Posts::where('post_id', $id)->first();
-		if ($user->can('view', $post)){
 		return view('post.show', ['post' => $post, 'user' => $post->users->name]);
-		} else {
-			return "No access!";
-		}
 	}
 
 	/**
@@ -89,7 +86,7 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request, $id) {
-		
+
 		$this->rules['seo_url'] .= ',' . $id . ',post_id';
 
 		$update = $request->validate($this->rules);
@@ -105,6 +102,7 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id) {
+
 		Posts::where('post_id', $id)->delete();
 		return redirect('/post');
 	}

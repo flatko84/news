@@ -15,13 +15,14 @@ $(document).ready(function () {
                 $('#send-post').attr('disabled', false);
             },
             success: function (json) {
-                
-                $('#success').html("Success!");
-                $('#success').show().delay(1500).fadeOut(500);
+                if (json == 1) {
+                    $('#success').html("Success!");
+
+                    $('#success').show().delay(1500).fadeOut(500);
+                }
             }
             ,
             error: function (error) {
-
                 var errors = error.responseJSON.errors;
                 $.each(errors, function (key, element) {
                     $("#" + key + "-error").html(element);

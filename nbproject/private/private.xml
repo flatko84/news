@@ -8,12 +8,11 @@
             <file>file:/home/vdonkov/coding/news/resources/views/post/edit.blade.php</file>
             <file>file:/home/vdonkov/coding/news/app/Categories.php</file>
             <file>file:/home/vdonkov/coding/news/resources/views/post/create.blade.php</file>
-            <file>file:/home/vdonkov/coding/news/public/js/delete.js</file>
+            <file>file:/home/vdonkov/coding/news/app/Policies/PostsPolicy.php</file>
             <file>file:/home/vdonkov/coding/news/app/Http/Controllers/PostController.php</file>
             <file>file:/home/vdonkov/coding/news/resources/views/post/index.blade.php</file>
             <file>file:/home/vdonkov/coding/news/resources/views/post.blade.php</file>
             <file>file:/home/vdonkov/coding/news/routes/web.php</file>
-            <file>file:/home/vdonkov/coding/news/public/js/post.js</file>
             <file>file:/home/vdonkov/coding/news/app/Posts.php</file>
         </group>
     </open-files>
