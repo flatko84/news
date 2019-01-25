@@ -90,8 +90,10 @@ class PostController extends Controller {
 
 		$this->rules['seo_url'] .= ',' . $id . ',post_id';
 		$post = Posts::where('post_id', $id)->first();
+		
 		$this->authorize('update', $post);
 		$update = $request->validate($this->rules);
+		
 		$post = Posts::where('post_id', $id)->update($update);
 		return json_encode($post);
 	}
