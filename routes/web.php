@@ -13,10 +13,7 @@
 use App\Posts;
 
 Auth::routes();
-//Route::resource('/post', 'PostController')->middleware('auth');
-Route::get('/post/{post}', function (Posts $post){
-	return "Post " . $post->post_id;
-})->middleware('can:view,post');
+Route::resource('/post', 'PostController')->middleware('auth');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'FeedController@index');

@@ -61,8 +61,9 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show($id) {
-		
+
 		$post = Posts::where('post_id', $id)->first();
+		$this->authorize('view', $post);
 		return view('post.show', ['post' => $post, 'user' => $post->users->name]);
 	}
 
@@ -74,6 +75,7 @@ class PostController extends Controller {
 	 */
 	public function edit($id) {
 		$post = Posts::where('post_id', $id)->first();
+		$this->authorize('update', $post);
 		$categories = Categories::all();
 		return view('post.edit', ['post' => $post, 'categories' => $categories]);
 	}
@@ -88,7 +90,8 @@ class PostController extends Controller {
 	public function update(Request $request, $id) {
 
 		$this->rules['seo_url'] .= ',' . $id . ',post_id';
-
+		$post = Posts::where('post_id', $id)->first();
+		$this->authorize('update', $post);
 		$update = $request->validate($this->rules);
 		$update['image'] = '';
 		$post = Posts::where('post_id', $id)->update($update);
@@ -103,6 +106,8 @@ class PostController extends Controller {
 	 */
 	public function destroy($id) {
 
+		$post = Posts::where('post_id', $id)->first();
+		$this->authorize('delete', $post);
 		Posts::where('post_id', $id)->delete();
 		return redirect('/post');
 	}
