@@ -48,7 +48,6 @@ class PostController extends Controller {
 
 		$insert = $request->validate($this->rules);
 		$insert['user_id'] = Auth::id();
-		$insert['image'] = '';
 		$post = Posts::create($insert);
 
 		return redirect('/post/' . $post->post_id . '/edit');
@@ -93,7 +92,6 @@ class PostController extends Controller {
 		$post = Posts::where('post_id', $id)->first();
 		$this->authorize('update', $post);
 		$update = $request->validate($this->rules);
-		$update['image'] = '';
 		$post = Posts::where('post_id', $id)->update($update);
 		return json_encode($post);
 	}
