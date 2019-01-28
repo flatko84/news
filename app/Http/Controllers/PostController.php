@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Posts;
 use App\Categories;
+use App\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller {
 
@@ -24,7 +24,9 @@ class PostController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index() {
-		$posts = Posts::where('user_id', Auth::id())->get();
+		$user_id = Auth::id();
+		$user = User::where('id', $user_id)->first();
+		$posts = ($user->admin == true) ? Posts::all() : Posts::where('user_id', $user_id)->get();
 		return view('post.index', ['posts' => $posts]);
 	}
 

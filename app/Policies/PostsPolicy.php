@@ -28,7 +28,7 @@ class PostsPolicy {
 	 * @param  \App\User  $user
 	 * @return mixed
 	 */
-	public function create(User $user) {
+	public function create() {
 		return true;
 	}
 

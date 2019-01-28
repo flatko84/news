@@ -16,16 +16,19 @@
 
 						<tr>
 							<td>
-								{{ $post['title'] }}
+								<b>{{ $post->title }}</b>
+							</td>
+								<td>
+									{{ $post->users->name }}
+												</td>
+							<td>
+								<a href="/post/{{ $post->post_id }}">Show</a>
 							</td>
 							<td>
-								<a href="/post/{{ $post['post_id'] }}">Show</a>
+								<a href="/post/{{ $post->post_id }}/edit">Edit</a>
 							</td>
 							<td>
-								<a href="/post/{{ $post['post_id'] }}/edit">Edit</a>
-							</td>
-							<td>
-								<a href="javascript:del({{ $post['post_id'] }})">Delete</a>
+								<a href="javascript:del({{ $post->post_id }})">Delete</a>
 							</td>
 						</tr>
 
