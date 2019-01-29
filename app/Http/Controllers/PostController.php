@@ -7,6 +7,7 @@ use App\Posts;
 use App\Categories;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Collective\Html\FormBuilder;
 
 class PostController extends Controller {
 
@@ -14,6 +15,7 @@ class PostController extends Controller {
 		'title' => 'required|min:5|max:30',
 		'content' => 'required|min:30|max:400',
 		'tags' => 'required',
+		'image' => '',
 		'seo_url' => 'required|alpha_dash|unique:posts,seo_url',
 		'category_id' => 'required'
 	];
@@ -50,6 +52,8 @@ class PostController extends Controller {
 
 		$insert = $request->validate($this->rules);
 		$insert['user_id'] = Auth::id();
+		$path = $request->file('image')->store('images');
+		$insert['image'] = $path;
 		$post = Posts::create($insert);
 
 		return redirect('/post/' . $post->post_id . '/edit');

@@ -15,7 +15,6 @@ class AdminController extends Controller {
 
 	public function toggle(Request $request, $id) {
 
-
 		$user = User::where('id', $id)->update(['admin' => $request->admin]);
 		return json_encode($user);
 	}

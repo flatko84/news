@@ -7,7 +7,8 @@
 			<a href="/post">To List</a>
             <div class="card">
 				<h3>Post Add/Edit</h3>
-				<form id="post-form" action="{{ route('post.store') }}" method="POST">
+				{{ Form::open(array('route' => 'post.store', 'files' => true)) }}
+
 				{{ csrf_field() }}
 				<table>
 					<tr>
@@ -15,7 +16,8 @@
 							Title:
 						</td>
 						<td>
-							<input type="text" name="title" value="{{ old('title') }}">
+							{{ Form::text('title', old('title')) }}
+
 						</td>
 								<td><div id="title-error" class="error">{{ $errors->first('title') }}</div></td>
 					</tr>
@@ -30,10 +32,19 @@
 					</tr>
 					<tr>
 						<td>
+							Image:
+						</td>
+						<td>
+							{{ Form::file('image', old('image')) }}
+						</td>
+						<td><div id="tags-error" class="error">{{ $errors->first('tags') }}</div></td>
+					</tr>
+					<tr>
+						<td>
 							Tags:
 						</td>
 						<td>
-							<input type="text" name="tags" value="{{ old('tags') }}">
+							{{ Form::text('tags', old('tags')) }}
 						</td>
 						<td><div id="tags-error" class="error">{{ $errors->first('tags') }}</div></td>
 					</tr>
@@ -42,7 +53,7 @@
 							SEO URL:
 						</td>
 						<td>
-							<input type="text" name="seo_url" value="{{ old('seo_url') }}">
+							{{ Form::text('seo_url', old('seo_url')) }}
 						</td>
 						<td><div id="seo_url-error" class="error">{{ $errors->first('seo_url') }}</div></td>
 					</tr>
@@ -54,15 +65,15 @@
 							<select name="category_id">
 								@foreach ($categories as $category)
 								<option value='{{ $category['category_id'] }}'> {{ $category['title'] }}
-								@endforeach
+									@endforeach
 							</select>
 						</td>
 						<td><div id="seo_url-error" class="error">{{ $errors->first('category') }}</div></td>
 					</tr>
 					<tr><td></td><td>
-							<input type="submit" value="Save" id="send-post"></td></tr>
+							{{ Form::submit('Save') }}</td></tr>
 				</table>
-				</form>
+				{{ Form::close() }}
 			</div>
 		</div>
 	</div>
