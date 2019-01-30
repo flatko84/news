@@ -66,6 +66,7 @@
     <body>
         
 			<h2> {{ $post['title'] }} </h2><br>
+			<img src="{{ asset('storage/'.$post['image']) }}">
 			<p>{{ $post['content'] }} </p>
 			Posted by {{ $user }}
         

@@ -1,35 +1,28 @@
-$(document).ready(function () {
-    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-    $('#send-post').click(function () {
+
+
+$(document).ready(function (e) {
+    $('#post-form').on('submit', (function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
 
         $.ajax({
-            url: '/post/' + $('#post-id').val(),
-            type: 'put',
-            data: $('#post-form').serialize(),
-            dataType: 'json',
-            beforeSend: function () {
-                $('#send-post').attr('disabled', true);
-                $('.error').html('');
-            },
-            complete: function () {
-                $('#send-post').attr('disabled', false);
-            },
-            success: function (json) {
-                if (json == 1) {
-                    $('#success').html("Success!");
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('#success').html("Success!");
 
-                    $('#success').show().delay(1500).fadeOut(500);
-                }
-            }
-            ,
-            error: function (error) {
-                var errors = error.responseJSON.errors;
-                $.each(errors, function (key, element) {
-                    $("#" + key + "-error").html(element);
-
-                });
+                $('#success').show().delay(1500).fadeOut(500);
+            },
+            error: function (data) {
+                console.log("error");
+                console.log(data);
             }
         });
-    });
-}
-);
+    }));
+
+
+});

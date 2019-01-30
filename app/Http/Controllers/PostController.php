@@ -52,8 +52,8 @@ class PostController extends Controller {
 
 		$insert = $request->validate($this->rules);
 		$insert['user_id'] = Auth::id();
-		$path = $request->file('image')->store('images');
-		$insert['image'] = $path;
+		$path = $request->file('image')->store('public');
+		$insert['image'] = substr($path, 7);
 		$post = Posts::create($insert);
 
 		return redirect('/post/' . $post->post_id . '/edit');
@@ -99,6 +99,11 @@ class PostController extends Controller {
 		
 		$this->authorize('update', $post);
 		$update = $request->validate($this->rules);
+		
+		if ($request->file('image')){
+			$path = $request->file('image')->store('public');
+			$update['image'] = substr($path, 7);
+		}
 		
 		$post = Posts::where('post_id', $id)->update($update);
 		return json_encode($post);

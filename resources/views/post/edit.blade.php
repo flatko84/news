@@ -9,7 +9,7 @@
             <div class="card">
 				<h3>Post Add/Edit</h3>
 				@if ($post)
-				<form id="post-form">
+				{{ Form::open(array('method' => 'put', 'route' => array('post.update', $post->post_id), 'files' => true, 'id' => 'post-form')) }}
 				<input type="hidden" name="post_id" id="post-id" value="{{ $post->post_id }}">
 				{{ csrf_field() }}
 				<table>
@@ -20,7 +20,7 @@
 						<td>
 							<input type="text" name="title" value="{{ $post->title }}">
 						</td>
-								<td><div id="title-error" class="error"></div></td>
+						<td><div id="title-error" class="error"></div></td>
 					</tr>
 					<tr>
 						<td>
@@ -30,6 +30,15 @@
 							<textarea name="content">{{ $post->content }}</textarea>
 						</td>
 						<td><div id="content-error" class="error"></div></td>
+					</tr>
+					<tr>
+						<td>
+							Image:
+						</td>
+						<td>
+							{{ Form::file('image') }}
+						</td>
+						<td><div id="tags-error" class="error"></div></td>
 					</tr>
 					<tr>
 						<td>
@@ -57,22 +66,22 @@
 							<select name="category_id">
 								@foreach ($categories as $category)
 								<option @if ($category['category_id'] == $post->category_id) selected @endif value='{{ $category['category_id'] }}'> {{ $category['title'] }}
-								@endforeach
-							</select>
-						</td>
-						<td><div id="seo_url-error" class="error">{{ $errors->first('category') }}</div></td>
-					</tr>
-					<tr><td></td><td>
-							<input type="button" value="Save" id="send-post"></td></tr>
-				</table>
-				</form>
-				<a href="/post/{{ $post->post_id }}">Show</a>
-				@else
-				You don't have permission to edit this post.
-				@endif
-			</div>
+										 @endforeach
+						</select>
+					</td>
+					<td><div id="seo_url-error" class="error">{{ $errors->first('category') }}</div></td>
+				</tr>
+				<tr><td></td><td>
+						<input type="submit" value="Save"></td></tr>
+			</table>
+			{{ Form::close() }}
+			<a href="/post/{{ $post->post_id }}">Show</a>
+			@else
+			You don't have permission to edit this post.
+			@endif
 		</div>
 	</div>
+</div>
 </div>
 @endsection
 
