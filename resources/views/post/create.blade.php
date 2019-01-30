@@ -26,7 +26,7 @@
 							Content:
 						</td>
 						<td>
-							<textarea name="content">{{ old('content') }}</textarea>
+							{{ Form::textarea('content', old('content')) }}
 						</td>
 						<td><div id="content-error" class="error">{{ $errors->first('content') }}</div></td>
 					</tr>

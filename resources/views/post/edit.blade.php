@@ -18,7 +18,7 @@
 							Title:
 						</td>
 						<td>
-							<input type="text" name="title" value="{{ $post->title }}">
+							{{ Form::text('title', $post->title) }}
 						</td>
 						<td><div id="title-error" class="error"></div></td>
 					</tr>
@@ -27,7 +27,7 @@
 							Content:
 						</td>
 						<td>
-							<textarea name="content">{{ $post->content }}</textarea>
+							{{ Form::textarea('content', $post->content) }}
 						</td>
 						<td><div id="content-error" class="error"></div></td>
 					</tr>
@@ -45,7 +45,7 @@
 							Tags:
 						</td>
 						<td>
-							<input type="text" name="tags" value="{{ $post->tags }}">
+							{{ Form::text('tags', $post->tags) }}
 						</td>
 						<td><div id="tags-error" class="error"></div></td>
 					</tr>
@@ -54,7 +54,7 @@
 							SEO URL:
 						</td>
 						<td>
-							<input type="text" name="seo_url" value="{{ $post->seo_url }}">
+							{{ Form::text('seo_url', $post->seo_url) }}
 						</td>
 						<td><div id="seo_url-error" class="error"></div></td>
 					</tr>
@@ -72,7 +72,7 @@
 					<td><div id="seo_url-error" class="error">{{ $errors->first('category') }}</div></td>
 				</tr>
 				<tr><td></td><td>
-						<input type="submit" value="Save"></td></tr>
+						{{ Form::submit('Save') }}</td></tr>
 			</table>
 			{{ Form::close() }}
 			<a href="/post/{{ $post->post_id }}">Show</a>
