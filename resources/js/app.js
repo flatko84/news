@@ -19,8 +19,8 @@ window.Vue = require('vue');
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('list-component', require('./components/ListComponent.vue').default);
+Vue.component('post-component', require('./components/PostComponent.vue').default);
 Vue.component('form-component', require('./components/FormComponent.vue').default);
 Vue.component('image-upload-component', require('./components/ImageUploadComponent.vue').default);
 

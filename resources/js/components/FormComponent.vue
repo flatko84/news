@@ -2,7 +2,7 @@
   <div>
     <form method="put" id="post-form" enctype="multipart/form-data" :action="action" @submit.prevent="sendArticle">
       <input type="hidden" :value="csrf" name="_token">
-
+    <div v-if="success">Success!</div>
       <table>
         <tr>
           <td>Title:</td>
@@ -10,7 +10,7 @@
             <input type="text" name="title" v-model="title">
           </td>
           <td>
-            <div id="title-error" class="error"></div>
+            <div v-if="errors.title" id="title-error" class="error">{{ errors.title['0'] }}</div>
           </td>
         </tr>
         <tr>
@@ -19,7 +19,7 @@
             <textarea name="content" v-model="content"></textarea>
           </td>
           <td>
-            <div id="content-error" class="error"></div>
+            <div v-if="errors.content" id="content-error" class="error">{{ errors.content['0'] }}</div>
           </td>
         </tr>
         <tr>
@@ -28,7 +28,7 @@
             <image-upload-component @changedimage="changeImage" :src="image"></image-upload-component>
           </td>
           <td>
-            <div id="image-error" class="error"></div>
+            <div v-if="errors.image" id="image-error" class="error">{{ errors.image['0'] }}</div>
           </td>
         </tr>
         <tr>
@@ -37,7 +37,7 @@
             <input type="text" name="tags" v-model="tags">
           </td>
           <td>
-            <div id="tags-error" class="error"></div>
+            <div v-if="errors.tags" id="tags-error" class="error">{{ errors.tags['0'] }}</div>
           </td>
         </tr>
         <tr>
@@ -46,7 +46,7 @@
             <input type="text" name="seo_url" v-model="seo_url">
           </td>
           <td>
-            <div id="seo_url-error" class="error"></div>
+            <div v-if="errors.seo_url" id="seo_url-error" class="error">{{ errors.seo_url['0'] }}</div>
           </td>
         </tr>
         <tr>
@@ -61,7 +61,7 @@
             </select>
           </td>
           <td>
-            <div id="seo_url-error" class="error"></div>
+            <div id="category_id" class="error"></div>
           </td>
         </tr>
         <tr>
@@ -81,7 +81,10 @@ import ImageUploadComponent from './ImageUploadComponent.vue';
 export default {
   props: ["action", "csrf", "post", "categories"],
   data() {
-    return JSON.parse(this.post);
+    let data = JSON.parse(this.post);
+    data.success = false;
+    data.errors = {};
+    return data;
   },
   methods: {
     changeImage(imageblob){
@@ -98,8 +101,20 @@ export default {
       formData.append('_token', this.csrf);
       if (typeof this.post_id !== 'undefined') {formData.append('_method', 'PUT');}
       window.axios.post(this.action, formData)
-      .then(response => {console.log(response)})
-      .catch(error => {console.log(error.response)});
+      .then(response => {
+        if (response.data.post_id) {
+          window.location = '/post/' + response.data.post_id + '/edit';
+        };
+        this.success = true;
+        this.errors = {};
+        setTimeout(func => {
+                this.success = false;
+            }, 2000);
+      })
+      .catch(error => {
+        this.errors = error.response.data.errors;
+        this.success = false;
+        });
     }
   },
   computed: {
