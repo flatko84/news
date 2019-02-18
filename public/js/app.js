@@ -1763,7 +1763,6 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ImageUploadComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ImageUploadComponent.vue */ "./resources/js/components/ImageUploadComponent.vue");
 //
 //
 //
@@ -1841,11 +1840,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["action", "csrf", "post", "categories"],
+  props: ["action", "csrf", "postid", "categories"],
   data: function data() {
-    var data = JSON.parse(this.post);
+    var data = {};
+    data.post = {};
     data.success = false;
     data.errors = {};
     return data;
@@ -1858,12 +1857,12 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var formData = new FormData();
-      formData.append('title', this.title);
-      formData.append('content', this.content);
-      formData.append('image', this.image);
-      formData.append('tags', this.tags);
-      formData.append('seo_url', this.seo_url);
-      formData.append('category_id', this.category_id);
+      formData.append('title', this.post.title);
+      formData.append('content', this.post.content);
+      formData.append('image', this.post.image);
+      formData.append('tags', this.post.tags);
+      formData.append('seo_url', this.post.seo_url);
+      formData.append('category_id', this.post.category_id);
       formData.append('_token', this.csrf);
 
       if (typeof this.post_id !== 'undefined') {
@@ -1891,6 +1890,13 @@ __webpack_require__.r(__webpack_exports__);
     categoried: function categoried() {
       return JSON.parse(this.categories);
     }
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    window.axios.get('/post/' + this.postid + '/edit').then(function (response) {
+      _this2.post = response.data.post;
+    });
   }
 });
 
@@ -1954,6 +1960,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['postsdata', 'csrf'],
   data: function data() {
@@ -2004,29 +2011,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['postid', 'title', 'user'],
+  props: ["postid", "title", "user", "csrf"],
   data: function data() {
-    return {};
+    return {
+      edit: false
+    };
   },
   computed: {
-    edit: function edit() {
-      return "/post/" + this.postid + "/edit";
+    action: function action() {
+      return "/post/" + this.postid + "/update";
     }
   },
   methods: {
+    toggleEdit: function toggleEdit() {
+      this.edit = this.edit === true ? false : true;
+    },
     del: function del() {
       var c = confirm("Delete " + this.title + "?");
 
       if (c == true) {
-        this.$emit('del', this.postid);
+        this.$emit("del", this.postid);
       }
     }
   }
@@ -36964,18 +36969,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.title,
-                    expression: "title"
+                    value: _vm.post.title,
+                    expression: "post.title"
                   }
                 ],
                 attrs: { type: "text", name: "title" },
-                domProps: { value: _vm.title },
+                domProps: { value: _vm.post.title },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.title = $event.target.value
+                    _vm.$set(_vm.post, "title", $event.target.value)
                   }
                 }
               })
@@ -37001,18 +37006,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.content,
-                    expression: "content"
+                    value: _vm.post.content,
+                    expression: "post.content"
                   }
                 ],
                 attrs: { name: "content" },
-                domProps: { value: _vm.content },
+                domProps: { value: _vm.post.content },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.content = $event.target.value
+                    _vm.$set(_vm.post, "content", $event.target.value)
                   }
                 }
               })
@@ -37036,7 +37041,7 @@ var render = function() {
               "td",
               [
                 _c("image-upload-component", {
-                  attrs: { src: _vm.image },
+                  attrs: { src: _vm.post.image },
                   on: { changedimage: _vm.changeImage }
                 })
               ],
@@ -37063,18 +37068,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.tags,
-                    expression: "tags"
+                    value: _vm.post.tags,
+                    expression: "post.tags"
                   }
                 ],
                 attrs: { type: "text", name: "tags" },
-                domProps: { value: _vm.tags },
+                domProps: { value: _vm.post.tags },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.tags = $event.target.value
+                    _vm.$set(_vm.post, "tags", $event.target.value)
                   }
                 }
               })
@@ -37100,18 +37105,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.seo_url,
-                    expression: "seo_url"
+                    value: _vm.post.seo_url,
+                    expression: "post.seo_url"
                   }
                 ],
                 attrs: { type: "text", name: "seo_url" },
-                domProps: { value: _vm.seo_url },
+                domProps: { value: _vm.post.seo_url },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.seo_url = $event.target.value
+                    _vm.$set(_vm.post, "seo_url", $event.target.value)
                   }
                 }
               })
@@ -37139,8 +37144,8 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.category_id,
-                      expression: "category_id"
+                      value: _vm.post.category_id,
+                      expression: "post.category_id"
                     }
                   ],
                   attrs: { name: "category_id" },
@@ -37154,9 +37159,13 @@ var render = function() {
                           var val = "_value" in o ? o._value : o.value
                           return val
                         })
-                      _vm.category_id = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
+                      _vm.$set(
+                        _vm.post,
+                        "category_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
                     }
                   }
                 },
@@ -37266,7 +37275,8 @@ var render = function() {
         attrs: {
           postid: post["post_id"],
           title: post["title"],
-          user: post["user"]
+          user: post["user"],
+          csrf: "csrf"
         },
         on: { del: _vm.del }
       })
@@ -37298,17 +37308,29 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row justify-content-center" }, [
     _c("div", { staticClass: "col-md-8" }, [
-      _c("div", { staticClass: "card card-default" }, [
-        _c("b", [_vm._v(_vm._s(_vm.title))]),
-        _vm._v(
-          "\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t" +
-            _vm._s(_vm.user) +
-            "\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t"
-        ),
-        _c("a", { attrs: { href: _vm.edit } }, [_vm._v("Edit")]),
-        _vm._v(" "),
-        _c("button", { on: { click: _vm.del } }, [_vm._v("Delete")])
-      ])
+      _c(
+        "div",
+        { staticClass: "card card-default" },
+        [
+          _c("b", [_vm._v(_vm._s(_vm.title))]),
+          _vm._v("\n      " + _vm._s(_vm.user) + "\n      "),
+          _c("button", { on: { click: _vm.toggleEdit } }, [_vm._v("Edit")]),
+          _vm._v(" "),
+          _vm.edit
+            ? _c("form-component", {
+                attrs: {
+                  postid: _vm.postid,
+                  categories: "[]",
+                  csrf: _vm.csrf,
+                  action: _vm.action
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _c("button", { on: { click: _vm.del } }, [_vm._v("Delete")])
+        ],
+        1
+      )
     ])
   ])
 }

@@ -12,6 +12,3 @@
 </div>
 @endsection
  
-@section('ajax')
-<script src="{{ asset('js/delete.js') }}" defer></script>
-@endsection

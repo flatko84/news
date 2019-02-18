@@ -95,7 +95,7 @@ class PostController extends Controller
         $post = Posts::where('post_id', $id)->first();
         $this->authorize('update', $post);
         $categories = Categories::all();
-        return view('post.edit', ['post' => $post, 'categories' => $categories]);
+        return json_encode(['post' => $post, 'categories' => $categories]);
     }
 
     /**

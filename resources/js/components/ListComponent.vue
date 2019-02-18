@@ -7,6 +7,7 @@
       :title="post['title']"
       :user="post['user']"
       @del="del"
+      csrf="csrf"
     ></post-component>
   </div>
 </template>
