@@ -2061,6 +2061,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["postid", "title", "user", "csrf"],
   data: function data() {
@@ -37389,11 +37398,24 @@ var render = function() {
         { staticClass: "card card-default" },
         [
           _c("b", [_vm._v(_vm._s(_vm.titleRender))]),
-          _vm._v("\n      " + _vm._s(_vm.user) + "\n      "),
-          _c("input", {
-            attrs: { type: "button", value: "Edit" },
-            on: { click: _vm.toggleEdit }
-          }),
+          _vm._v("\n      " + _vm._s(_vm.user) + "\n    "),
+          _c("table", [
+            _c("tr", [
+              _c("td", [
+                _c("input", {
+                  attrs: { type: "button", value: "Edit" },
+                  on: { click: _vm.toggleEdit }
+                })
+              ]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  attrs: { type: "button", value: "Delete" },
+                  on: { click: _vm.del }
+                })
+              ])
+            ])
+          ]),
           _vm._v(" "),
           _vm.edit
             ? _c("form-component", {
@@ -37404,12 +37426,7 @@ var render = function() {
                 },
                 on: { editPost: _vm.editPost }
               })
-            : _vm._e(),
-          _vm._v(" "),
-          _c("input", {
-            attrs: { type: "button", value: "Delete" },
-            on: { click: _vm.del }
-          })
+            : _vm._e()
         ],
         1
       )

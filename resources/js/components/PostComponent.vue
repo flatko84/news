@@ -4,9 +4,18 @@
       <div class="card card-default">
         <b>{{ titleRender }}</b>
         {{ user }}
+      <table>
+        <tr>
+          <td>
         <input type="button" @click="toggleEdit" value="Edit">
-        <form-component v-if="edit" :postid="postid" :csrf="csrf" :action="action" @editPost="editPost"></form-component>
+          </td>
+          <td>
         <input type="button" @click="del" value="Delete">
+          </td>
+          </tr>
+          </table>
+        <form-component v-if="edit" :postid="postid" :csrf="csrf" :action="action" @editPost="editPost"></form-component>
+       
       </div>
     </div>
   </div>
