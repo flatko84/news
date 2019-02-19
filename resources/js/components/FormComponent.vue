@@ -54,7 +54,7 @@
           <td>
             <select name="category_id" v-model="post.category_id">
               <option
-                v-for="category in categoried"
+                v-for="category in categories"
                 :value="category.category_id"
                 :key="category.category_id"
               >{{ category.title }}</option>
@@ -79,17 +79,18 @@
 
 
 export default {
-  props: ["action", "csrf", "postid", "categories"],
+  props: ["action", "csrf", "postid"],
   data() {
     let data = {};
     data.post = {};
+    data.categories = {};
     data.success = false;
     data.errors = {};
     return data;
   },
   methods: {
     changeImage(imageblob){
-      this.image = imageblob;
+      this.post.image = imageblob;
     },
     sendArticle() {
       let formData = new FormData();
@@ -100,11 +101,11 @@ export default {
       formData.append('seo_url', this.post.seo_url);
       formData.append('category_id', this.post.category_id);
       formData.append('_token', this.csrf);
-      if (typeof this.post_id !== 'undefined') {formData.append('_method', 'PUT');}
+      if (typeof this.post.post_id !== 'undefined') {formData.append('_method', 'PUT');}
       window.axios.post(this.action, formData)
       .then(response => {
         if (response.data.post_id) {
-          window.location = '/post/' + response.data.post_id + '/edit';
+          this.$emit('newPost', response.data);
         };
         this.success = true;
         this.errors = {};
@@ -113,22 +114,27 @@ export default {
             }, 2000);
       })
       .catch(error => {
+        console.log(error.response);
         this.errors = error.response.data.errors;
         this.success = false;
         });
-    }
-  },
-  computed: {
-    categoried: function() {
-      return JSON.parse(this.categories);
     }
   },
   mounted() {
     window.axios.get('/post/' + this.postid + '/edit')
     .then(
       response => {
-
         this.post = response.data.post;
+       // this.categories = response.data.categories;
+      }
+    );
+    window.axios.get('/category')
+    .then(response => {
+      this.categories = response.data;
+    })
+    .catch(
+      error => {
+        console.log(error.response);
       }
     )
   }

@@ -7,8 +7,11 @@
       :title="post['title']"
       :user="post['user']"
       @del="del"
-      csrf="csrf"
+      :csrf="csrf"
     ></post-component>
+    <button @click="toggleCreate">Create</button>
+    <form-component v-if="create" post='{"title":"","content":"","image":"","tags":"","seo_url":"","category_id":""}' :csrf="this.csrf" action="/post" @newPost="newPost">
+				</form-component>
   </div>
 </template>
 
@@ -17,10 +20,20 @@ export default {
   props: ['postsdata', 'csrf'],
   data() {
     return {
-      posts: JSON.parse(this.postsdata)
+      posts: JSON.parse(this.postsdata),
+      create: false
     };
   },
   methods: {
+    newPost(post){
+      console.log(post);
+      this.posts.push(post);
+      this.create = false;
+
+    },
+    toggleCreate(){
+      this.create = (this.create === true) ? false : true;
+    },
     del(post_id) {
       window.axios.post("/post/" + post_id, {
           _method: 'DELETE',

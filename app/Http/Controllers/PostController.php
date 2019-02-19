@@ -49,7 +49,7 @@ class PostController extends Controller
     public function create()
     {
         $categories = Categories::all();
-        return view('post.create', ['categories' => $categories]);
+        return json_encode(['categories' => $categories]);
     }
 
     /**
@@ -137,5 +137,11 @@ class PostController extends Controller
         Posts::where('post_id', $id)->delete();
         return redirect('/post');
     }
+
+    public function categories(){
+        $categories = Categories::all();
+        return json_encode($categories);
+    }
+
 
 }

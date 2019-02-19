@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     action: function() {
-      return "/post/" + this.postid + "/update";
+      return "/post/" + this.postid;
     }
   },
   methods: {
