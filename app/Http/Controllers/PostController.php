@@ -15,7 +15,7 @@ class PostController extends Controller
         'title' => 'required|min:5|max:30',
         'content' => 'required|min:30|max:400',
         'tags' => 'required',
-        'image' => 'required | image | max:1000',
+        'image' => 'image | max:1000',
         'seo_url' => 'required|alpha_dash|unique:posts,seo_url',
         'category_id' => 'required',
     ];

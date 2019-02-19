@@ -4,9 +4,9 @@
       <div class="card card-default">
         <b>{{ title }}</b>
         {{ user }}
-        <button @click="toggleEdit">Edit</button>
-        <form-component v-if="edit" :postid="postid" categories="[]" :csrf="csrf" :action="action"></form-component>
-        <button @click="del">Delete</button>
+        <input type="button" @click="toggleEdit" value="Edit">
+        <form-component v-if="edit" :postid="postid" :csrf="csrf" :action="action"></form-component>
+        <input type="button" @click="del" value="Delete">
       </div>
     </div>
   </div>

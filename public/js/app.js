@@ -1872,6 +1872,8 @@ __webpack_require__.r(__webpack_exports__);
 
       window.axios.post(this.action, formData).then(function (response) {
         if (response.data.post_id) {
+          _this.post = {};
+
           _this.$emit('newPost', response.data);
         }
 
@@ -1882,17 +1884,21 @@ __webpack_require__.r(__webpack_exports__);
           _this.success = false;
         }, 2000);
       }).catch(function (error) {
-        console.log(error.response);
         _this.errors = error.response.data.errors;
         _this.success = false;
       });
+    }
+  },
+  computed: {
+    showImage: function showImage() {
+      return !this.postid || this.post.image ? true : false;
     }
   },
   mounted: function mounted() {
     var _this2 = this;
 
     window.axios.get('/post/' + this.postid + '/edit').then(function (response) {
-      _this2.post = response.data.post; // this.categories = response.data.categories;
+      _this2.post = response.data.post;
     });
     window.axios.get('/category').then(function (response) {
       _this2.categories = response.data;
@@ -1966,8 +1972,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['postsdata', 'csrf'],
+  props: ["postsdata", "csrf"],
   data: function data() {
     return {
       posts: JSON.parse(this.postsdata),
@@ -1976,7 +1986,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     newPost: function newPost(post) {
-      console.log(post);
       this.posts.push(post);
       this.create = false;
     },
@@ -1987,7 +1996,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       window.axios.post("/post/" + post_id, {
-        _method: 'DELETE',
+        _method: "DELETE",
         _token: this.csrf
       }).then(function () {
         var index = _this.posts.findIndex(function (post) {
@@ -37054,10 +37063,12 @@ var render = function() {
             _c(
               "td",
               [
-                _c("image-upload-component", {
-                  attrs: { src: _vm.post.image },
-                  on: { changedimage: _vm.changeImage }
-                })
+                _vm.showImage
+                  ? _c("image-upload-component", {
+                      attrs: { src: _vm.post.image },
+                      on: { changedimage: _vm.changeImage }
+                    })
+                  : _vm._e()
               ],
               1
             ),
@@ -37222,7 +37233,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td"),
       _vm._v(" "),
-      _c("td", [_c("input", { attrs: { type: "submit" } })])
+      _c("td", [_c("input", { attrs: { type: "submit", value: "Publish" } })])
     ])
   }
 ]
@@ -37297,19 +37308,23 @@ var render = function() {
         })
       }),
       _vm._v(" "),
-      _c("button", { on: { click: _vm.toggleCreate } }, [_vm._v("Create")]),
+      _c("input", {
+        attrs: { type: "button", value: "Create" },
+        on: { click: _vm.toggleCreate }
+      }),
       _vm._v(" "),
-      _vm.create
-        ? _c("form-component", {
-            attrs: {
-              post:
-                '{"title":"","content":"","image":"","tags":"","seo_url":"","category_id":""}',
-              csrf: this.csrf,
-              action: "/post"
-            },
-            on: { newPost: _vm.newPost }
-          })
-        : _vm._e()
+      _c("form-component", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.create,
+            expression: "create"
+          }
+        ],
+        attrs: { csrf: this.csrf, action: "/post" },
+        on: { newPost: _vm.newPost }
+      })
     ],
     2
   )
@@ -37344,20 +37359,25 @@ var render = function() {
         [
           _c("b", [_vm._v(_vm._s(_vm.title))]),
           _vm._v("\n      " + _vm._s(_vm.user) + "\n      "),
-          _c("button", { on: { click: _vm.toggleEdit } }, [_vm._v("Edit")]),
+          _c("input", {
+            attrs: { type: "button", value: "Edit" },
+            on: { click: _vm.toggleEdit }
+          }),
           _vm._v(" "),
           _vm.edit
             ? _c("form-component", {
                 attrs: {
                   postid: _vm.postid,
-                  categories: "[]",
                   csrf: _vm.csrf,
                   action: _vm.action
                 }
               })
             : _vm._e(),
           _vm._v(" "),
-          _c("button", { on: { click: _vm.del } }, [_vm._v("Delete")])
+          _c("input", {
+            attrs: { type: "button", value: "Delete" },
+            on: { click: _vm.del }
+          })
         ],
         1
       )

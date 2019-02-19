@@ -9,39 +9,43 @@
       @del="del"
       :csrf="csrf"
     ></post-component>
-    <button @click="toggleCreate">Create</button>
-    <form-component v-if="create" post='{"title":"","content":"","image":"","tags":"","seo_url":"","category_id":""}' :csrf="this.csrf" action="/post" @newPost="newPost">
-				</form-component>
+    <input type="button" @click="toggleCreate" value="Create">
+    <form-component
+      v-show="create"
+      :csrf="this.csrf"
+      action="/post"
+      @newPost="newPost"
+    ></form-component>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['postsdata', 'csrf'],
+  props: ["postsdata", "csrf"],
   data() {
     return {
       posts: JSON.parse(this.postsdata),
-      create: false
+      create: false,
     };
   },
   methods: {
-    newPost(post){
-      console.log(post);
+    newPost(post) {
       this.posts.push(post);
       this.create = false;
-
     },
-    toggleCreate(){
-      this.create = (this.create === true) ? false : true;
+    toggleCreate() {
+      this.create = this.create === true ? false : true;
     },
     del(post_id) {
-      window.axios.post("/post/" + post_id, {
-          _method: 'DELETE',
+      window.axios
+        .post("/post/" + post_id, {
+          _method: "DELETE",
           _token: this.csrf
-      }).then(() => {
-        let index = this.posts.findIndex(post => post.post_id === post_id);
+        })
+        .then(() => {
+          let index = this.posts.findIndex(post => post.post_id === post_id);
           this.posts.splice(index, 1);
-      });
+        });
     }
   }
 };

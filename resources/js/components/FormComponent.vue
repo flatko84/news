@@ -25,7 +25,7 @@
         <tr>
           <td>Image:</td>
           <td>
-            <image-upload-component @changedimage="changeImage" :src="post.image"></image-upload-component>
+            <image-upload-component v-if="showImage" @changedimage="changeImage" :src="post.image"></image-upload-component>
           </td>
           <td>
             <div v-if="errors.image" id="image-error" class="error">{{ errors.image['0'] }}</div>
@@ -67,7 +67,7 @@
         <tr>
           <td></td>
           <td>
-            <input type="submit">
+            <input type="submit" value="Publish">
           </td>
         </tr>
       </table>
@@ -105,6 +105,7 @@ export default {
       window.axios.post(this.action, formData)
       .then(response => {
         if (response.data.post_id) {
+          this.post = {};
           this.$emit('newPost', response.data);
         };
         this.success = true;
@@ -114,10 +115,14 @@ export default {
             }, 2000);
       })
       .catch(error => {
-        console.log(error.response);
         this.errors = error.response.data.errors;
         this.success = false;
         });
+    }
+  },
+  computed: {
+    showImage: function () {
+      return (!this.postid || this.post.image) ? true : false;
     }
   },
   mounted() {
@@ -125,7 +130,6 @@ export default {
     .then(
       response => {
         this.post = response.data.post;
-       // this.categories = response.data.categories;
       }
     );
     window.axios.get('/category')
