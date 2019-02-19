@@ -1924,6 +1924,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     if (this.postid) {
       window.axios.get("/post/" + this.postid + "/edit").then(function (response) {
         _this2.post = response.data.post;
+
+        if (_this2.post.image == '') {
+          _this2.post.image = '-';
+        }
       }).catch(function (errors) {
         console.log(errors.response);
       });
@@ -2047,6 +2051,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -37397,10 +37408,13 @@ var render = function() {
         "div",
         { staticClass: "card card-default" },
         [
-          _c("b", [_vm._v(_vm._s(_vm.titleRender))]),
-          _vm._v("\n      " + _vm._s(_vm.user) + "\n    "),
-          _c("table", [
+          _c("table", { attrs: { border: "1", width: "100%" } }, [
             _c("tr", [
+              _c("td", { staticStyle: { width: "500px" } }, [
+                _c("b", [_vm._v(_vm._s(_vm.titleRender))]),
+                _vm._v(" - \n            " + _vm._s(_vm.user) + "\n          ")
+              ]),
+              _vm._v(" "),
               _c("td", [
                 _c("input", {
                   attrs: { type: "button", value: "Edit" },

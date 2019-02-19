@@ -151,6 +151,7 @@ export default {
         .get("/post/" + this.postid + "/edit")
         .then(response => {
           this.post = response.data.post;
+          if (this.post.image == '') {this.post.image = '-';}
         })
         .catch(errors => {
           console.log(errors.response);

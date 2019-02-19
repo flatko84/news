@@ -2,20 +2,27 @@
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="card card-default">
-        <b>{{ titleRender }}</b>
-        {{ user }}
-      <table>
-        <tr>
-          <td>
-        <input type="button" @click="toggleEdit" value="Edit">
-          </td>
-          <td>
-        <input type="button" @click="del" value="Delete">
-          </td>
+        <table border=1 width=100%>
+          <tr>
+            <td style="width: 500px">
+              <b>{{ titleRender }}</b> - 
+              {{ user }}
+            </td>
+            <td>
+              <input type="button" @click="toggleEdit" value="Edit">
+            </td>
+            <td>
+              <input type="button" @click="del" value="Delete">
+            </td>
           </tr>
-          </table>
-        <form-component v-if="edit" :postid="postid" :csrf="csrf" :action="action" @editPost="editPost"></form-component>
-       
+        </table>
+        <form-component
+          v-if="edit"
+          :postid="postid"
+          :csrf="csrf"
+          :action="action"
+          @editPost="editPost"
+        ></form-component>
       </div>
     </div>
   </div>
@@ -40,8 +47,7 @@ export default {
       this.titleRender = title;
     },
     toggleEdit() {
-
-        this.edit = (this.edit === true) ? false : true;
+      this.edit = this.edit === true ? false : true;
     },
     del() {
       let c = confirm("Delete " + this.title + "?");
