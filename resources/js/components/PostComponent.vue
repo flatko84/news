@@ -2,10 +2,10 @@
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="card card-default">
-        <b>{{ title }}</b>
+        <b>{{ titleRender }}</b>
         {{ user }}
         <input type="button" @click="toggleEdit" value="Edit">
-        <form-component v-if="edit" :postid="postid" :csrf="csrf" :action="action"></form-component>
+        <form-component v-if="edit" :postid="postid" :csrf="csrf" :action="action" @editPost="editPost"></form-component>
         <input type="button" @click="del" value="Delete">
       </div>
     </div>
@@ -17,7 +17,8 @@ export default {
   props: ["postid", "title", "user", "csrf"],
   data() {
     return {
-      edit: false
+      edit: false,
+      titleRender: this.title
     };
   },
   computed: {
@@ -26,6 +27,9 @@ export default {
     }
   },
   methods: {
+    editPost(title) {
+      this.titleRender = title;
+    },
     toggleEdit() {
 
         this.edit = (this.edit === true) ? false : true;

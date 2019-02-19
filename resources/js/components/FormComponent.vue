@@ -1,8 +1,14 @@
 <template>
   <div>
-    <form method="put" id="post-form" enctype="multipart/form-data" :action="action" @submit.prevent="sendArticle">
+    <form
+      method="put"
+      id="post-form"
+      enctype="multipart/form-data"
+      :action="action"
+      @submit.prevent="sendArticle"
+    >
       <input type="hidden" :value="csrf" name="_token">
-    <div v-if="success">Success!</div>
+      <div v-if="success">Success!</div>
       <table>
         <tr>
           <td>Title:</td>
@@ -76,8 +82,6 @@
 </template>
 
 <script>
-
-
 export default {
   props: ["action", "csrf", "postid"],
   data() {
@@ -89,58 +93,72 @@ export default {
     return data;
   },
   methods: {
-    changeImage(imageblob){
+    changeImage(imageblob) {
       this.post.image = imageblob;
     },
     sendArticle() {
       let formData = new FormData();
-      formData.append('title', this.post.title);
-      formData.append('content', this.post.content);
-      formData.append('image', this.post.image);
-      formData.append('tags', this.post.tags);
-      formData.append('seo_url', this.post.seo_url);
-      formData.append('category_id', this.post.category_id);
-      formData.append('_token', this.csrf);
-      if (typeof this.post.post_id !== 'undefined') {formData.append('_method', 'PUT');}
-      window.axios.post(this.action, formData)
-      .then(response => {
-        if (response.data.post_id) {
-          this.post = {};
-          this.$emit('newPost', response.data);
-        };
-        this.success = true;
-        this.errors = {};
-        setTimeout(func => {
-                this.success = false;
-            }, 2000);
-      })
-      .catch(error => {
-        this.errors = error.response.data.errors;
-        this.success = false;
+      if (this.post.title) {
+        formData.append("title", this.post.title);
+      }
+      if (this.post.content) {
+        formData.append("content", this.post.content);
+      }
+      if (typeof this.post.image === "object") {
+        formData.append("image", this.post.image);
+      }
+      if (this.post.tags) {
+        formData.append("tags", this.post.tags);
+      }
+      if (this.post.seo_url) {
+        formData.append("seo_url", this.post.seo_url);
+      }
+      if (this.post.category_id) {
+        formData.append("category_id", this.post.category_id);
+      }
+      formData.append("_token", this.csrf);
+      if (typeof this.post.post_id !== "undefined") {
+        formData.append("_method", "PUT");
+      }
+      window.axios
+        .post(this.action, formData)
+        .then(response => {
+        
+            this.$emit("newPost", response.data);
+       
+            this.$emit("editPost", this.post.title);
+          
+          this.success = true;
+          this.errors = {};
+          setTimeout(func => {
+            this.success = false;
+          }, 2000);
+        })
+        .catch(error => {
+          this.errors = error.response.data.errors;
+          this.success = false;
         });
     }
   },
   computed: {
-    showImage: function () {
-      return (!this.postid || this.post.image) ? true : false;
+    showImage: function() {
+      return !this.postid || this.post.image ? true : false;
     }
   },
   mounted() {
-    window.axios.get('/post/' + this.postid + '/edit')
-    .then(
-      response => {
-        this.post = response.data.post;
-      }
-    );
-    window.axios.get('/category')
-    .then(response => {
+    if (this.postid) {
+      window.axios
+        .get("/post/" + this.postid + "/edit")
+        .then(response => {
+          this.post = response.data.post;
+        })
+        .catch(errors => {
+          console.log(errors.response);
+        });
+    }
+    window.axios.get("/category").then(response => {
       this.categories = response.data;
-    })
-    .catch(
-      error => {
-        console.log(error.response);
-      }
-    )
+    });
   }
 };
 </script>

@@ -1763,6 +1763,14 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1858,26 +1866,42 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var formData = new FormData();
-      formData.append('title', this.post.title);
-      formData.append('content', this.post.content);
-      formData.append('image', this.post.image);
-      formData.append('tags', this.post.tags);
-      formData.append('seo_url', this.post.seo_url);
-      formData.append('category_id', this.post.category_id);
-      formData.append('_token', this.csrf);
 
-      if (typeof this.post.post_id !== 'undefined') {
-        formData.append('_method', 'PUT');
+      if (this.post.title) {
+        formData.append("title", this.post.title);
+      }
+
+      if (this.post.content) {
+        formData.append("content", this.post.content);
+      }
+
+      if (_typeof(this.post.image) === "object") {
+        formData.append("image", this.post.image);
+      }
+
+      if (this.post.tags) {
+        formData.append("tags", this.post.tags);
+      }
+
+      if (this.post.seo_url) {
+        formData.append("seo_url", this.post.seo_url);
+      }
+
+      if (this.post.category_id) {
+        formData.append("category_id", this.post.category_id);
+      }
+
+      formData.append("_token", this.csrf);
+
+      if (typeof this.post.post_id !== "undefined") {
+        formData.append("_method", "PUT");
       }
 
       window.axios.post(this.action, formData).then(function (response) {
-        if (response.data.post_id) {
-          _this.post = {};
+        _this.$emit("newPost", response.data);
 
-          _this.$emit('newPost', response.data);
-        }
+        _this.$emit("editPost", _this.post.title);
 
-        ;
         _this.success = true;
         _this.errors = {};
         setTimeout(function (func) {
@@ -1897,13 +1921,16 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this2 = this;
 
-    window.axios.get('/post/' + this.postid + '/edit').then(function (response) {
-      _this2.post = response.data.post;
-    });
-    window.axios.get('/category').then(function (response) {
+    if (this.postid) {
+      window.axios.get("/post/" + this.postid + "/edit").then(function (response) {
+        _this2.post = response.data.post;
+      }).catch(function (errors) {
+        console.log(errors.response);
+      });
+    }
+
+    window.axios.get("/category").then(function (response) {
       _this2.categories = response.data;
-    }).catch(function (error) {
-      console.log(error.response);
     });
   }
 });
@@ -2038,7 +2065,8 @@ __webpack_require__.r(__webpack_exports__);
   props: ["postid", "title", "user", "csrf"],
   data: function data() {
     return {
-      edit: false
+      edit: false,
+      titleRender: this.title
     };
   },
   computed: {
@@ -2047,6 +2075,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    editPost: function editPost(title) {
+      this.titleRender = title;
+    },
     toggleEdit: function toggleEdit() {
       this.edit = this.edit === true ? false : true;
     },
@@ -37357,7 +37388,7 @@ var render = function() {
         "div",
         { staticClass: "card card-default" },
         [
-          _c("b", [_vm._v(_vm._s(_vm.title))]),
+          _c("b", [_vm._v(_vm._s(_vm.titleRender))]),
           _vm._v("\n      " + _vm._s(_vm.user) + "\n      "),
           _c("input", {
             attrs: { type: "button", value: "Edit" },
@@ -37370,7 +37401,8 @@ var render = function() {
                   postid: _vm.postid,
                   csrf: _vm.csrf,
                   action: _vm.action
-                }
+                },
+                on: { editPost: _vm.editPost }
               })
             : _vm._e(),
           _vm._v(" "),

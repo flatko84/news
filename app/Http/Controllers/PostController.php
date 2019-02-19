@@ -32,13 +32,13 @@ class PostController extends Controller
         $posts = ($user->admin == true) ? Posts::all() : Posts::where('user_id', $user_id)->get();
         $posts_data = array();
         foreach ($posts as $post){
-            $posts_data[] = [
+            $posts_data[] = (object) [
                 'post_id' => $post->post_id,
                 'title' => $post->title,
                 'user' => $post->users->name
             ];
         }
-        return view('post.index', ['posts' => $posts]);
+        return view('post.index', ['posts' => json_encode($posts_data)]);
     }
 
     /**
@@ -63,8 +63,14 @@ class PostController extends Controller
 
         $insert = $request->validate($this->rules);
         $insert['user_id'] = Auth::id();
-        $path = $request->file('image')->store('public');
-        $insert['image'] = substr($path, 7);
+
+        if ($request->file('image')) {
+            $path = $request->file('image')->store('public');
+            $insert['image'] = substr($path, 7);
+        } else {
+            $insert['image'] = '';
+        }
+
         $post = Posts::create($insert);
 
         return json_encode($post);
