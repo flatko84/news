@@ -17,7 +17,7 @@ class PostController extends Controller
         'tags' => 'required',
         'image' => 'image | max:1000',
         'seo_url' => 'required|alpha_dash|unique:posts,seo_url',
-        'category_id' => 'required',
+        'category_id' => 'required | numeric',
     ];
 
     /**
@@ -35,7 +35,7 @@ class PostController extends Controller
             $posts_data[] = (object) [
                 'post_id' => $post->post_id,
                 'title' => $post->title,
-                'user' => $post->users->name
+                'user' => ($post->users->id == $user_id) ? "You" : $post->users->name
             ];
         }
         return view('post.index', ['posts' => json_encode($posts_data)]);

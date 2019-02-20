@@ -1898,9 +1898,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
 
       window.axios.post(this.action, formData).then(function (response) {
-        _this.$emit("newPost", response.data);
-
-        _this.$emit("editPost", _this.post.title);
+        if (typeof _this.post.post_id !== "undefined") {
+          _this.$emit("editPost", _this.post.title);
+        } else {
+          _this.$emit("savedPost", response.data);
+        }
 
         _this.success = true;
         _this.errors = {};
@@ -1925,8 +1927,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       window.axios.get("/post/" + this.postid + "/edit").then(function (response) {
         _this2.post = response.data.post;
 
-        if (_this2.post.image == '') {
-          _this2.post.image = '-';
+        if (_this2.post.image == "") {
+          _this2.post.image = "-";
         }
       }).catch(function (errors) {
         console.log(errors.response);
@@ -2006,22 +2008,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["postsdata", "csrf"],
   data: function data() {
     return {
-      posts: JSON.parse(this.postsdata),
-      create: false
+      posts: JSON.parse(this.postsdata)
     };
   },
   methods: {
-    newPost: function newPost(post) {
-      this.posts.push(post);
-      this.create = false;
+    newPost: function newPost() {
+      var index = this.posts.push({}) - 1;
+      this.posts[index] = {
+        tempid: index
+      };
     },
-    toggleCreate: function toggleCreate() {
-      this.create = this.create === true ? false : true;
+    savedPost: function savedPost(response) {
+      var index = this.posts.findIndex(function (post) {
+        return post.tempid === response.tempid;
+      });
+      this.posts[index] = response;
     },
     del: function del(post_id) {
       var _this = this;
@@ -2036,6 +2041,12 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.posts.splice(index, 1);
       });
+    },
+    rem: function rem(tempid) {
+      var index = this.posts.findIndex(function (post) {
+        return post.tempid === tempid;
+      });
+      this.posts.splice(index, 1);
     }
   }
 });
@@ -2081,20 +2092,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["postid", "title", "user", "csrf"],
+  props: ["tempid", "postid", "title", "user", "csrf"],
   data: function data() {
     return {
       edit: false,
-      titleRender: this.title
+      postidRender: this.postid,
+      titleRender: this.title,
+      tempidRender: this.tempid,
+      userRender: this.user
     };
   },
   computed: {
     action: function action() {
-      return "/post/" + this.postid;
+      var action = "/post/";
+
+      if (this.postidRender && this.postidRender != "undefined") {
+        action += this.postidRender;
+      }
+
+      ;
+      return action;
     }
   },
   methods: {
+    savedPost: function savedPost(post) {
+      this.postidRender = post.post_id;
+      this.titleRender = post.title;
+      this.userRender = "You";
+      this.edit = false;
+      var response = {
+        post_id: post.post_id,
+        title: post.title,
+        tempid: this.tempid,
+        user: "You"
+      };
+      this.$emit('savedPost', response);
+    },
     editPost: function editPost(title) {
       this.titleRender = title;
     },
@@ -2102,10 +2138,17 @@ __webpack_require__.r(__webpack_exports__);
       this.edit = this.edit === true ? false : true;
     },
     del: function del() {
-      var c = confirm("Delete " + this.title + "?");
+      var c = confirm("Delete " + this.titleRender + "?");
 
       if (c == true) {
-        this.$emit("del", this.postid);
+        this.$emit("del", this.postidRender);
+      }
+    },
+    rem: function rem() {
+      var c = confirm("Cancel new article?");
+
+      if (c == true) {
+        this.$emit('rem', this.tempid);
       }
     }
   }
@@ -37259,24 +37302,27 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _c("td", [
+              _vm.errors.category_id
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "error",
+                      attrs: { id: "category_id-error" }
+                    },
+                    [_vm._v(_vm._s(_vm.errors.category_id["0"]))]
+                  )
+                : _vm._e()
+            ])
           ]),
           _vm._v(" "),
-          _vm._m(1)
+          _vm._m(0)
         ])
       ]
     )
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("div", { staticClass: "error", attrs: { id: "category_id" } })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -37348,33 +37394,21 @@ var render = function() {
     [
       _vm._l(_vm.posts, function(post) {
         return _c("post-component", {
-          key: post["post_id"],
+          key: post.post_id,
           attrs: {
-            postid: post["post_id"],
-            title: post["title"],
-            user: post["user"],
+            postid: post.post_id,
+            tempid: post.tempid,
+            title: post.title,
+            user: post.user,
             csrf: _vm.csrf
           },
-          on: { del: _vm.del }
+          on: { savedPost: _vm.savedPost, del: _vm.del, rem: _vm.rem }
         })
       }),
       _vm._v(" "),
       _c("input", {
-        attrs: { type: "button", value: "Create" },
-        on: { click: _vm.toggleCreate }
-      }),
-      _vm._v(" "),
-      _c("form-component", {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.create,
-            expression: "create"
-          }
-        ],
-        attrs: { csrf: this.csrf, action: "/post" },
-        on: { newPost: _vm.newPost }
+        attrs: { type: "button", value: "+" },
+        on: { click: _vm.newPost }
       })
     ],
     2
@@ -37412,7 +37446,9 @@ var render = function() {
             _c("tr", [
               _c("td", { staticStyle: { width: "500px" } }, [
                 _c("b", [_vm._v(_vm._s(_vm.titleRender))]),
-                _vm._v(" - \n            " + _vm._s(_vm.user) + "\n          ")
+                _vm._v(
+                  " - \n            " + _vm._s(_vm.userRender) + "\n          "
+                )
               ]),
               _vm._v(" "),
               _c("td", [
@@ -37423,10 +37459,15 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("td", [
-                _c("input", {
-                  attrs: { type: "button", value: "Delete" },
-                  on: { click: _vm.del }
-                })
+                _vm.postidRender
+                  ? _c("input", {
+                      attrs: { type: "button", value: "Delete" },
+                      on: { click: _vm.del }
+                    })
+                  : _c("input", {
+                      attrs: { type: "button", value: "Cancel" },
+                      on: { click: _vm.rem }
+                    })
               ])
             ])
           ]),
@@ -37434,11 +37475,11 @@ var render = function() {
           _vm.edit
             ? _c("form-component", {
                 attrs: {
-                  postid: _vm.postid,
+                  postid: _vm.postidRender,
                   csrf: _vm.csrf,
                   action: _vm.action
                 },
-                on: { editPost: _vm.editPost }
+                on: { editPost: _vm.editPost, savedPost: _vm.savedPost }
               })
             : _vm._e()
         ],

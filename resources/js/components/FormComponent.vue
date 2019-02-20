@@ -67,7 +67,7 @@
             </select>
           </td>
           <td>
-            <div id="category_id" class="error"></div>
+            <div v-if="errors.category_id" id="category_id-error" class="error">{{ errors.category_id['0'] }}</div>
           </td>
         </tr>
         <tr>
@@ -123,11 +123,11 @@ export default {
       window.axios
         .post(this.action, formData)
         .then(response => {
-        
-            this.$emit("newPost", response.data);
-       
+          if (typeof this.post.post_id !== "undefined") {
             this.$emit("editPost", this.post.title);
-          
+          } else {
+            this.$emit("savedPost", response.data);
+          }
           this.success = true;
           this.errors = {};
           setTimeout(func => {
@@ -151,7 +151,9 @@ export default {
         .get("/post/" + this.postid + "/edit")
         .then(response => {
           this.post = response.data.post;
-          if (this.post.image == '') {this.post.image = '-';}
+          if (this.post.image == "") {
+            this.post.image = "-";
+          }
         })
         .catch(errors => {
           console.log(errors.response);

@@ -2,20 +2,19 @@
   <div class="container">
     <post-component
       v-for="post in posts"
-      :key="post['post_id']"
-      :postid="post['post_id']"
-      :title="post['title']"
-      :user="post['user']"
+      :key="post.post_id"
+      :postid="post.post_id"
+      :tempid="post.tempid"
+      :title="post.title"
+      :user="post.user"
+      @savedPost="savedPost"
       @del="del"
+      @rem="rem"
       :csrf="csrf"
     ></post-component>
-    <input type="button" @click="toggleCreate" value="Create">
-    <form-component
-      v-show="create"
-      :csrf="this.csrf"
-      action="/post"
-      @newPost="newPost"
-    ></form-component>
+    
+  
+    <input type="button" @click="newPost" value="+">
   </div>
 </template>
 
@@ -24,17 +23,17 @@ export default {
   props: ["postsdata", "csrf"],
   data() {
     return {
-      posts: JSON.parse(this.postsdata),
-      create: false,
+      posts: JSON.parse(this.postsdata)
     };
   },
   methods: {
-    newPost(post) {
-      this.posts.push(post);
-      this.create = false;
+    newPost() {
+      let index = this.posts.push({}) -1;
+      this.posts[index] = {tempid: index};
     },
-    toggleCreate() {
-      this.create = this.create === true ? false : true;
+    savedPost(response){
+      let index = this.posts.findIndex(post => post.tempid === response.tempid);
+      this.posts[index] = response;
     },
     del(post_id) {
       window.axios
@@ -46,6 +45,10 @@ export default {
           let index = this.posts.findIndex(post => post.post_id === post_id);
           this.posts.splice(index, 1);
         });
+    },
+    rem(tempid){
+      let index = this.posts.findIndex(post => post.tempid === tempid);
+          this.posts.splice(index, 1);
     }
   }
   
