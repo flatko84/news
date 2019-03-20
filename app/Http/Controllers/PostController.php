@@ -72,7 +72,6 @@ class PostController extends Controller
         }
 
         $post = Posts::create($insert);
-
         return json_encode($post);
     }
 

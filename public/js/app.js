@@ -2062,6 +2062,97 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2102,7 +2193,11 @@ __webpack_require__.r(__webpack_exports__);
       postidRender: this.postid,
       titleRender: this.title,
       tempidRender: this.tempid,
-      userRender: this.user
+      userRender: this.user,
+      post: {},
+      categories: {},
+      success: false,
+      errors: {}
     };
   },
   computed: {
@@ -2113,27 +2208,13 @@ __webpack_require__.r(__webpack_exports__);
         action += this.postidRender;
       }
 
-      ;
       return action;
+    },
+    showImage: function showImage() {
+      return !this.postid || this.post.image ? true : false;
     }
   },
   methods: {
-    savedPost: function savedPost(post) {
-      this.postidRender = post.post_id;
-      this.titleRender = post.title;
-      this.userRender = "You";
-      this.edit = false;
-      var response = {
-        post_id: post.post_id,
-        title: post.title,
-        tempid: this.tempid,
-        user: "You"
-      };
-      this.$emit('savedPost', response);
-    },
-    editPost: function editPost(title) {
-      this.titleRender = title;
-    },
     toggleEdit: function toggleEdit() {
       this.edit = this.edit === true ? false : true;
     },
@@ -2148,9 +2229,94 @@ __webpack_require__.r(__webpack_exports__);
       var c = confirm("Cancel new article?");
 
       if (c == true) {
-        this.$emit('rem', this.tempid);
+        this.$emit("rem", this.tempid);
       }
+    },
+    changeImage: function changeImage(imageblob) {
+      this.post.image = imageblob;
+    },
+    sendArticle: function sendArticle() {
+      var _this = this;
+
+      var formData = new FormData();
+
+      if (this.post.title) {
+        formData.append("title", this.post.title);
+      }
+
+      if (this.post.content) {
+        formData.append("content", this.post.content);
+      }
+
+      if (_typeof(this.post.image) === "object") {
+        formData.append("image", this.post.image);
+      }
+
+      if (this.post.tags) {
+        formData.append("tags", this.post.tags);
+      }
+
+      if (this.post.seo_url) {
+        formData.append("seo_url", this.post.seo_url);
+      }
+
+      if (this.post.category_id) {
+        formData.append("category_id", this.post.category_id);
+      }
+
+      formData.append("_token", this.csrf);
+
+      if (typeof this.post.post_id !== "undefined") {
+        formData.append("_method", "PUT");
+      }
+
+      window.axios.post(this.action, formData).then(function (response) {
+        if (typeof _this.post.post_id !== "undefined") {
+          _this.titleRender = _this.post.title;
+        } else {
+          _this.postidRender = _response.data.post_id;
+          _this.titleRender = _response.data.title;
+          _this.userRender = "You";
+          _this.edit = false;
+          var _response = {
+            post_id: _response.data.post_id,
+            title: _response.data.title,
+            tempid: _this.tempid,
+            user: "You"
+          };
+
+          _this.$emit("savedPost", _response);
+        }
+
+        _this.success = true;
+        _this.errors = {};
+        setTimeout(function (func) {
+          _this.success = false;
+        }, 2000);
+      }).catch(function (error) {
+        _this.errors = error.response.data.errors;
+        _this.success = false;
+      });
     }
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    if (this.postid) {
+      window.axios.get("/post/" + this.postid + "/edit").then(function (response) {
+        _this2.post = response.data.post;
+
+        if (_this2.post.image == "") {
+          _this2.post.image = "-";
+        }
+      }).catch(function (errors) {
+        console.log(errors.response);
+      });
+    }
+
+    window.axios.get("/category").then(function (response) {
+      _this2.categories = response.data;
+    });
   }
 });
 
@@ -37438,57 +37604,342 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row justify-content-center" }, [
     _c("div", { staticClass: "col-md-8" }, [
-      _c(
-        "div",
-        { staticClass: "card card-default" },
-        [
-          _c("table", { attrs: { border: "1", width: "100%" } }, [
-            _c("tr", [
-              _c("td", { staticStyle: { width: "500px" } }, [
-                _c("b", [_vm._v(_vm._s(_vm.titleRender))]),
-                _vm._v(
-                  " - \n            " + _vm._s(_vm.userRender) + "\n          "
-                )
-              ]),
-              _vm._v(" "),
-              _c("td", [
-                _c("input", {
-                  attrs: { type: "button", value: "Edit" },
-                  on: { click: _vm.toggleEdit }
-                })
-              ]),
-              _vm._v(" "),
-              _c("td", [
-                _vm.postidRender
-                  ? _c("input", {
-                      attrs: { type: "button", value: "Delete" },
-                      on: { click: _vm.del }
-                    })
-                  : _c("input", {
-                      attrs: { type: "button", value: "Cancel" },
-                      on: { click: _vm.rem }
-                    })
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _vm.edit
-            ? _c("form-component", {
-                attrs: {
-                  postid: _vm.postidRender,
-                  csrf: _vm.csrf,
-                  action: _vm.action
-                },
-                on: { editPost: _vm.editPost, savedPost: _vm.savedPost }
+      _c("div", { staticClass: "card card-default" }, [
+        _c("table", { attrs: { border: "1", width: "100%" } }, [
+          _c("tr", [
+            _c("td", { staticStyle: { width: "500px" } }, [
+              _c("b", [_vm._v(_vm._s(_vm.titleRender))]),
+              _vm._v(
+                "\n            -\n            " +
+                  _vm._s(_vm.userRender) +
+                  "\n          "
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _c("input", {
+                attrs: { type: "button", value: "Edit" },
+                on: { click: _vm.toggleEdit }
               })
-            : _vm._e()
-        ],
-        1
-      )
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _vm.postidRender
+                ? _c("input", {
+                    attrs: { type: "button", value: "Delete" },
+                    on: { click: _vm.del }
+                  })
+                : _c("input", {
+                    attrs: { type: "button", value: "Cancel" },
+                    on: { click: _vm.rem }
+                  })
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _vm.edit
+          ? _c("div", [
+              _c(
+                "form",
+                {
+                  attrs: {
+                    method: "put",
+                    id: "post-form",
+                    enctype: "multipart/form-data",
+                    action: _vm.action
+                  },
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.sendArticle($event)
+                    }
+                  }
+                },
+                [
+                  _c("input", {
+                    attrs: { type: "hidden", name: "_token" },
+                    domProps: { value: _vm.csrf }
+                  }),
+                  _vm._v(" "),
+                  _vm.success ? _c("div", [_vm._v("Success!")]) : _vm._e(),
+                  _vm._v(" "),
+                  _c("table", [
+                    _c("tr", [
+                      _c("td", [_vm._v("Title:")]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.post.title,
+                              expression: "post.title"
+                            }
+                          ],
+                          attrs: { type: "text", name: "title" },
+                          domProps: { value: _vm.post.title },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.post, "title", $event.target.value)
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm.errors.title
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "error",
+                                attrs: { id: "title-error" }
+                              },
+                              [_vm._v(_vm._s(_vm.errors.title["0"]))]
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c("td", [_vm._v("Content:")]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.post.content,
+                              expression: "post.content"
+                            }
+                          ],
+                          attrs: { name: "content" },
+                          domProps: { value: _vm.post.content },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.post, "content", $event.target.value)
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm.errors.content
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "error",
+                                attrs: { id: "content-error" }
+                              },
+                              [_vm._v(_vm._s(_vm.errors.content["0"]))]
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c("td", [_vm._v("Image:")]),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        [
+                          _vm.showImage
+                            ? _c("image-upload-component", {
+                                attrs: { src: _vm.post.image },
+                                on: { changedimage: _vm.changeImage }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm.errors.image
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "error",
+                                attrs: { id: "image-error" }
+                              },
+                              [_vm._v(_vm._s(_vm.errors.image["0"]))]
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c("td", [_vm._v("Tags:")]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.post.tags,
+                              expression: "post.tags"
+                            }
+                          ],
+                          attrs: { type: "text", name: "tags" },
+                          domProps: { value: _vm.post.tags },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.post, "tags", $event.target.value)
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm.errors.tags
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "error",
+                                attrs: { id: "tags-error" }
+                              },
+                              [_vm._v(_vm._s(_vm.errors.tags["0"]))]
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c("td", [_vm._v("SEO URL:")]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.post.seo_url,
+                              expression: "post.seo_url"
+                            }
+                          ],
+                          attrs: { type: "text", name: "seo_url" },
+                          domProps: { value: _vm.post.seo_url },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.post, "seo_url", $event.target.value)
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm.errors.seo_url
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "error",
+                                attrs: { id: "seo_url-error" }
+                              },
+                              [_vm._v(_vm._s(_vm.errors.seo_url["0"]))]
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c("td", [_vm._v("Category:")]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.post.category_id,
+                                expression: "post.category_id"
+                              }
+                            ],
+                            attrs: { name: "category_id" },
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.post,
+                                  "category_id",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          _vm._l(_vm.categories, function(category) {
+                            return _c(
+                              "option",
+                              {
+                                key: category.category_id,
+                                domProps: { value: category.category_id }
+                              },
+                              [_vm._v(_vm._s(category.title))]
+                            )
+                          }),
+                          0
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm.errors.category_id
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "error",
+                                attrs: { id: "category_id-error" }
+                              },
+                              [_vm._v(_vm._s(_vm.errors.category_id["0"]))]
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(0)
+                  ])
+                ]
+              )
+            ])
+          : _vm._e()
+      ])
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td"),
+      _vm._v(" "),
+      _c("td", [_c("input", { attrs: { type: "submit", value: "Publish" } })])
+    ])
+  }
+]
 render._withStripped = true
 
 
