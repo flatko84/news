@@ -9,72 +9,8 @@
             <div class="card">
 				<h3>Post Add/Edit</h3>
 				@if ($post)
-				{{ Form::open(array('method' => 'put', 'route' => array('post.update', $post->post_id), 'files' => true, 'id' => 'post-form')) }}
-				<input type="hidden" name="post_id" id="post-id" value="{{ $post->post_id }}">
-				{{ csrf_field() }}
-				<table>
-					<tr>
-						<td>
-							Title:
-						</td>
-						<td>
-							{{ Form::text('title', $post->title) }}
-						</td>
-						<td><div id="title-error" class="error"></div></td>
-					</tr>
-					<tr>
-						<td>
-							Content:
-						</td>
-						<td>
-							{{ Form::textarea('content', $post->content) }}
-						</td>
-						<td><div id="content-error" class="error"></div></td>
-					</tr>
-					<tr>
-						<td>
-							Image:
-						</td>
-						<td>
-							{{ Form::file('image') }}
-						</td>
-						<td><div id="tags-error" class="error"></div></td>
-					</tr>
-					<tr>
-						<td>
-							Tags:
-						</td>
-						<td>
-							{{ Form::text('tags', $post->tags) }}
-						</td>
-						<td><div id="tags-error" class="error"></div></td>
-					</tr>
-					<tr>
-						<td>
-							SEO URL:
-						</td>
-						<td>
-							{{ Form::text('seo_url', $post->seo_url) }}
-						</td>
-						<td><div id="seo_url-error" class="error"></div></td>
-					</tr>
-					<tr>
-						<td>
-							Category:
-						</td>
-						<td>
-							<select name="category_id">
-								@foreach ($categories as $category)
-								<option @if ($category['category_id'] == $post->category_id) selected @endif value='{{ $category['category_id'] }}'> {{ $category['title'] }}
-										 @endforeach
-						</select>
-					</td>
-					<td><div id="seo_url-error" class="error">{{ $errors->first('category') }}</div></td>
-				</tr>
-				<tr><td></td><td>
-						{{ Form::submit('Save') }}</td></tr>
-			</table>
-			{{ Form::close() }}
+			<form-component post="{{ $post }}" categories="{{ $categories }}" csrf="{{ csrf_token() }}" action="{{ route('post.update', $post->post_id) }}">
+			</form-component>
 			<a href="/post/{{ $post->post_id }}">Show</a>
 			@else
 			You don't have permission to edit this post.
@@ -85,6 +21,4 @@
 </div>
 @endsection
 
-@section('ajax')
-<script src="{{ asset('js/post.js') }}" defer></script>
-@endsection
+

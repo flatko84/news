@@ -19,5 +19,10 @@ Route::post('/admin/{user}', 'AdminController@toggle')->middleware('isadmin', 'a
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'FeedController@index');
-Route::get('/{seo_url}', 'FeedController@post');
+
+
+Route::get('/category', 'PostController@categories');
 Route::get('/category/{category_id}', 'FeedController@category');
+
+Route::get('/{seo_url}', 'FeedController@post');
+
