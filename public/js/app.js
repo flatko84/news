@@ -2271,21 +2271,22 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
 
       window.axios.post(this.action, formData).then(function (response) {
-        if (typeof _this.post.post_id !== "undefined") {
+        if (typeof _this.post.post_id == "number") {
           _this.titleRender = _this.post.title;
         } else {
-          _this.postidRender = _response.data.post_id;
-          _this.titleRender = _response.data.title;
+          console.log("enter here");
+          _this.postidRender = response.data.post_id;
+          _this.titleRender = response.data.title;
           _this.userRender = "You";
           _this.edit = false;
-          var _response = {
-            post_id: _response.data.post_id,
-            title: _response.data.title,
+          var eventData = {
+            post_id: response.data.post_id,
+            title: response.data.title,
             tempid: _this.tempid,
             user: "You"
           };
 
-          _this.$emit("savedPost", _response);
+          _this.$emit("savedPost", eventData);
         }
 
         _this.success = true;
