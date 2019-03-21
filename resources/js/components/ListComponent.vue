@@ -13,7 +13,7 @@
       :csrf="csrf"
     ></post-component>
     
-  
+
     <input type="button" @click="newPost" value="+">
   </div>
 </template>
