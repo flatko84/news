@@ -2192,7 +2192,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       edit: false,
       postidRender: this.postid,
       titleRender: this.title,
-      tempidRender: this.tempid,
       userRender: this.user,
       post: {},
       categories: {},
@@ -2274,7 +2273,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         if (typeof _this.post.post_id == "number") {
           _this.titleRender = _this.post.title;
         } else {
-          console.log("enter here");
           _this.postidRender = response.data.post_id;
           _this.titleRender = response.data.title;
           _this.userRender = "You";

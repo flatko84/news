@@ -127,7 +127,6 @@ export default {
       edit: false,
       postidRender: this.postid,
       titleRender: this.title,
-      tempidRender: this.tempid,
       userRender: this.user,
       post: {},
       categories: {},
