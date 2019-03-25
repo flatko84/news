@@ -193,12 +193,9 @@ export default {
       window.axios
         .post(this.action, formData)
         .then(response => {
-          
           if (typeof this.post.post_id == "number") {
             this.titleRender = this.post.title;
-           
           } else {
-            console.log("enter here");
             this.postidRender = response.data.post_id;
             this.titleRender = response.data.title;
             this.userRender = "You";
@@ -209,9 +206,8 @@ export default {
               tempid: this.tempid,
               user: "You"
             };
-            
+
             this.$emit("savedPost", eventData);
-            
           }
           this.success = true;
           this.errors = {};
