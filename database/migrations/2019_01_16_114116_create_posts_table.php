@@ -21,7 +21,8 @@ class CreatePostsTable extends Migration
 			$table->text('content');
 			$table->string('image');
 			$table->string('tags');
-			$table->string('seo_url')->unique();
+            $table->string('seo_url')->unique();
+            $table->tinyInteger('status');
             $table->timestamps();
         });
     }
