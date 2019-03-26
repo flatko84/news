@@ -11,13 +11,22 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
 
+    // protected $rules = [
+    //     'title' => 'required|min:5|max:30',
+    //     'content' => 'required|min:30|max:400',
+    //     'tags' => 'required',
+    //     'image' => 'image | max:1000',
+    //     'seo_url' => 'required|alpha_dash|unique:posts,seo_url',
+    //     'category_id' => 'required | numeric',
+    // ];
+
     protected $rules = [
-        'title' => 'required|min:5|max:30',
-        'content' => 'required|min:30|max:400',
-        'tags' => 'required',
-        'image' => 'image | max:1000',
-        'seo_url' => 'required|alpha_dash|unique:posts,seo_url',
-        'category_id' => 'required | numeric',
+        'title' => '',
+        'content' => '',
+        'tags' => '',
+        'image' => '',
+        'seo_url' => '',
+        'category_id' => '',
     ];
 
     /**
@@ -63,6 +72,7 @@ class PostController extends Controller
 
         $insert = $request->validate($this->rules);
         $insert['user_id'] = Auth::id();
+        $insert['status'] = 0;
 
         if ($request->file('image')) {
             $path = $request->file('image')->store('public');

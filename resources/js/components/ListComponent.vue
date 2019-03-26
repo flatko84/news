@@ -12,7 +12,6 @@
       @rem="rem"
       :csrf="csrf"
     ></post-component>
-    
 
     <input type="button" @click="newPost" value="+">
   </div>
@@ -28,10 +27,18 @@ export default {
   },
   methods: {
     newPost() {
-      let index = this.posts.push({}) -1;
-      this.posts[index] = {tempid: index};
+      let formData = new FormData();
+      formData.append("title", '-');
+      formData.append("content", '-');
+      formData.append("image", '-');
+      formData.append("tags", '-');
+      formData.append("seo_url", '-');
+      formData.append("category_id", '0');
+      formData.append("_token", this.csrf);
+      let index = this.posts.push({}) - 1;
+      this.posts[index] = { tempid: index };
     },
-    savedPost(response){
+    savedPost(response) {
       let index = this.posts.findIndex(post => post.tempid === response.tempid);
       this.posts[index] = response;
     },
@@ -46,11 +53,10 @@ export default {
           this.posts.splice(index, 1);
         });
     },
-    rem(tempid){
+    rem(tempid) {
       let index = this.posts.findIndex(post => post.tempid === tempid);
-          this.posts.splice(index, 1);
+      this.posts.splice(index, 1);
     }
   }
-  
 };
 </script>

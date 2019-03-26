@@ -2007,7 +2007,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["postsdata", "csrf"],
   data: function data() {
@@ -2017,6 +2016,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     newPost: function newPost() {
+      var formData = new FormData();
+      formData.append("title", '-');
+      formData.append("content", '-');
+      formData.append("image", '-');
+      formData.append("tags", '-');
+      formData.append("seo_url", '-');
+      formData.append("category_id", '0');
+      formData.append("_token", this.csrf);
       var index = this.posts.push({}) - 1;
       this.posts[index] = {
         tempid: index
