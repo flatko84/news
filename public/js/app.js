@@ -2016,18 +2016,21 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     newPost: function newPost() {
+      var _this = this;
+
       var formData = new FormData();
-      formData.append("title", '-');
-      formData.append("content", '-');
-      formData.append("image", '-');
-      formData.append("tags", '-');
-      formData.append("seo_url", '-');
-      formData.append("category_id", '0');
+      formData.append("title", "-");
+      formData.append("content", "-");
+      formData.append("image", "-");
+      formData.append("tags", "-");
+      formData.append("seo_url", "-");
+      formData.append("category_id", "0");
       formData.append("_token", this.csrf);
-      var index = this.posts.push({}) - 1;
-      this.posts[index] = {
-        tempid: index
-      };
+      window.axios.post("/post", formData).then(function (response) {
+        _this.posts.push(response.data);
+      }).catch(function (error) {
+        console.log(error.response);
+      });
     },
     savedPost: function savedPost(response) {
       var index = this.posts.findIndex(function (post) {
@@ -2036,17 +2039,17 @@ __webpack_require__.r(__webpack_exports__);
       this.posts[index] = response;
     },
     del: function del(post_id) {
-      var _this = this;
+      var _this2 = this;
 
       window.axios.post("/post/" + post_id, {
         _method: "DELETE",
         _token: this.csrf
       }).then(function () {
-        var index = _this.posts.findIndex(function (post) {
+        var index = _this2.posts.findIndex(function (post) {
           return post.post_id === post_id;
         });
 
-        _this.posts.splice(index, 1);
+        _this2.posts.splice(index, 1);
       });
     },
     rem: function rem(tempid) {

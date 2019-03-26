@@ -28,15 +28,23 @@ export default {
   methods: {
     newPost() {
       let formData = new FormData();
-      formData.append("title", '-');
-      formData.append("content", '-');
-      formData.append("image", '-');
-      formData.append("tags", '-');
-      formData.append("seo_url", '-');
-      formData.append("category_id", '0');
+      formData.append("title", "-");
+      formData.append("content", "-");
+      formData.append("image", "-");
+      formData.append("tags", "-");
+      formData.append("seo_url", "-");
+      formData.append("category_id", "0");
       formData.append("_token", this.csrf);
-      let index = this.posts.push({}) - 1;
-      this.posts[index] = { tempid: index };
+
+      window.axios
+        .post("/post", formData)
+        .then(response => {
+          this.posts.push(response.data);
+          
+        })
+        .catch(error => {
+          console.log(error.response);
+        });
     },
     savedPost(response) {
       let index = this.posts.findIndex(post => post.tempid === response.tempid);
